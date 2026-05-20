@@ -60,7 +60,18 @@ public:
 
 };
 
-
+template <typename T>
+bool printeaza_lista(const vector<T*>& lista) {
+    if (lista.empty()) {
+        return false;
+    }
+    int i = 1;
+    for (T* elem : lista) {
+        cout << i << "." << *elem << "\n";
+        i++;
+    }
+    return true;
+}
 
 class Comanda {
 public:
@@ -84,7 +95,7 @@ class CrearePersonaj : public Comanda {
             int tip=tasta-'0';
             if (tip>3 || tip<0) {
                 system("cls");
-                cout<<"Clasa invalida";
+                cout<<"Comanda invalida";
                 Sleep(2000);
 
                 continue;
@@ -161,7 +172,7 @@ public:
             int tip=tasta-'0';
             if (tip>3 || tip<0) {
                 system("cls");
-                cout<<"Clasa invalida";
+                cout<<"Comanda invalida";
                 Sleep(2000);
 
                 continue;
@@ -222,6 +233,24 @@ public:
     AranjareLupta():isRunning(true) {}
 
     void Execute() const override {
+        system("cls");
+        if (Storage<Personaj>::getInstance().getElemente().size()<2) {
+            if (Storage<Arena>::getInstance().getElemente().size()<1) {
+                cout<<"Nu ai creat destule personaje si arene!";
+                Sleep(2500);
+                return;
+            }
+            cout<<"Nu ai creat destule personaje!";
+            Sleep(2500);
+            return;
+        }
+        if (Storage<Arena>::getInstance().getElemente().size()<1) {
+            cout<<"Nu ai creat nicio arena!";
+            Sleep(2500);
+            return;
+        }
+
+
         while (isRunning) {
             system("cls");
             cout<<"Alege Personaje:\n";
@@ -234,10 +263,11 @@ public:
             if (p==0)return;
             Personaj* p1=personaje[p-1];
             cout<<"Personaj 1:"<<*p1<<endl;
-            while (personaje[p-1]==p1 || p>personaje.size() || p<-1) {
+            while (p<-1|| p>personaje.size() || personaje[p-1]==p1 ) {
                 cin>>p;
+                if (p==0)return;
             }
-            if (p==0)return;
+
             Personaj* p2=personaje[p-1];
             cout<<"Personaj 2:"<<*p2<<endl;
             Sleep(2000);
@@ -254,7 +284,7 @@ public:
             cout<<"Arena aleasa:"<<*a;
             Sleep(1000);
             system("cls");
-            Lupta* l=new Lupta(p1,p2,a);
+            Lupta l(p1,p2,a);
             cout<<"1.Joc         2.Simulare";
             p=0;
             while (p!=1 && p!=2) {
@@ -263,10 +293,10 @@ public:
             }
             system("cls");
             if (p==1) {
-                l->desfasurare();
+                l.desfasurare();
             }
             if (p==2) {
-                l->simulare();
+                l.simulare();
             }
 
             Sleep(5000);
@@ -289,24 +319,19 @@ public:
         }
     }
      const vector<Personaj*>& afisare_personaje() const{
-        int i=1;
+
         const vector<Personaj*>& personaje=Storage<Personaj>::getInstance().getElemente();
-        for (Personaj* elem : personaje) {
-            cout<<i<<"."<<*elem<<endl;
-            i++;
-        }
+        printeaza_lista(personaje);
         return personaje;
     }
 
     const vector<Arena*>& afisare_arene() const {
-        int i=1;
+
         const vector<Arena*>& arene=Storage<Arena>::getInstance().getElemente();
-        for (Arena* elem : arene) {
-            cout<<i<<"."<<*elem<<endl;
-            i++;
-        }
+        printeaza_lista(arene);
         return arene;
     }
+    ~AranjareLupta(){isRunning=false;}
 };
 class StergerePersonaj: public Comanda {
     public:
@@ -315,15 +340,10 @@ class StergerePersonaj: public Comanda {
             system("cls");
             cout<<"STERGERE PERSONAJ\n\n";
             const vector<Personaj*>& personaje=Storage<Personaj>::getInstance().getElemente();
-            if (personaje.size()==0) {
-                cout<<"Nu exista personaje in lista";
+            if (!printeaza_lista(personaje)) {
+                cout<<"Nu exista personaje";
                 Sleep(1000);
                 return;
-            }
-            int i=1;
-            for (Personaj* elem : personaje) {
-                cout<<i<<"."<<*elem<<endl;
-                i++;
             }
             cout<<"\n0.Cancel\nAlege personajul de sters:";
             int alegere;
@@ -350,15 +370,10 @@ public:
             system("cls");
             cout<<"STERGERE ARENA\n\n";
             const vector<Arena*>& arene=Storage<Arena>::getInstance().getElemente();
-            if (arene.size()==0) {
-                cout<<"Nu exista Arene in lista";
+            if (!printeaza_lista(arene)) {
+                cout<<"Nu exista arene";
                 Sleep(1000);
                 return;
-            }
-            int i=1;
-            for (Arena* elem : arene) {
-                cout<<i<<"."<<*elem<<endl;
-                i++;
             }
             cout<<"\n0.Cancel\nAlege arena de sters:";
             int alegere;
