@@ -1,0 +1,26 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="MouseInfo" />
+          <option value="numpy" />
+          <option value="pandas" />
+          <option value="Pillow" />
+          <option value="PyAutoGUI" />
+          <option value="PyGetWindow" />
+          <option value="PyMsgBox" />
+          <option value="pyperclip" />
+          <option value="PyRect" />
+          <option value="PyScreeze" />
+          <option value="python-dateutil" />
+          <option value="PyTweening" />
+          <option value="pytz" />
+          <option value="six" />
+          <option value="easygui" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
