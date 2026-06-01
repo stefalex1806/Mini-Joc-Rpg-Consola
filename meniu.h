@@ -9,6 +9,7 @@
 #include "arene.hpp"
 #include "lupte.hpp"
 #include <fstream>
+#include "exceptii.hpp"
 using namespace std;
 
 template <typename T>
@@ -73,6 +74,30 @@ bool printeaza_lista(const vector<T*>& lista) {
     return true;
 }
 
+class PersonajFactory {
+public:
+    static Personaj* creazaPersonaj(int tip, string nume, int viata, int damage, string arma) {
+        switch (tip) {
+            case 1: return new Mag(nume, viata, damage, arma);
+            case 2: return new Erou(nume, viata, damage, arma);
+            case 3: return new Goblin(nume, viata, damage, arma);
+            default: throw EroareCrearePersonaj("Tip personaj necunoscut în Factory!");
+        }
+    }
+};
+
+class ArenaFactory {
+public:
+    static Arena* creazaArena(int tip, string nume, int nivel, int avantaj) {
+        switch (tip) {
+            case 1: return new ArenaMag(nume, nivel, avantaj);
+            case 2: return new ArenaErou(nume, nivel, avantaj);
+            case 3: return new ArenaGoblin(nume, nivel, avantaj);
+            default: throw EroareArena("Tip arena necunoscut în Factory!");
+        }
+    }
+};
+
 class Comanda {
 public:
     virtual ~Comanda() {}
@@ -124,22 +149,14 @@ class CrearePersonaj : public Comanda {
             system("cls");
             Personaj* p=nullptr;
             try {
-                switch (tip) {
-                    case 1:
-                        p=new Mag(nume,viata,damage,arma);
-                        break;
-                    case 2:
-                        p=new Erou(nume,viata,damage,arma);
-                        break;
-                    case 3:
-                        p=new Goblin(nume,viata,damage,arma);
-                        break;
 
-                }
-                Storage<Personaj>::getInstance().adauga(p);
-                cout<<"Am creat personajul:\n"<<*p;
+                    p = PersonajFactory::creazaPersonaj(tip, nume, viata, damage, arma);
 
-                Sleep(3000);
+                    Storage<Personaj>::getInstance().adauga(p);
+                    cout<<"Am creat personajul:\n"<<*p;
+
+                    Sleep(3000);
+
             }catch(exception& e) {
                 cout<<"Eroare: "<<e.what()<<endl;
                 Sleep(3000);
@@ -197,18 +214,8 @@ public:
             system("cls");
             Arena* p=nullptr;
             try {
-                switch (tip) {
-                    case 1:
-                        p=new ArenaMag(nume,nivel,avantaj);
-                        break;
-                    case 2:
-                        p=new ArenaErou(nume,nivel,avantaj);
-                        break;
-                    case 3:
-                        p=new ArenaGoblin(nume,nivel,avantaj);
-                        break;
+                p = ArenaFactory::creazaArena(tip, nume, nivel, avantaj);
 
-                }
                 Storage<Arena>::getInstance().adauga(p);
                 cout<<"Am creat arena:\n"<<*p;
 
